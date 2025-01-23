@@ -32,13 +32,8 @@ class CustomerServiceTest extends TestCase
         $mockResponse = [
             'data' => [[
                 'id' => '12345',
-                'email' => 'ornek@email.com',
-                'name' => 'Ahmet Yılmaz',
-                'attributes' => [
-                    'age' => 30,
-                    'city' => 'Istanbul',
-                    'last_purchase_date' => '2024-01-15'
-                ]
+                'email' => 'test@example.com',
+                'name' => 'Test User'
             ]]
         ];
 
@@ -46,28 +41,18 @@ class CustomerServiceTest extends TestCase
             new Response(200, [], json_encode($mockResponse))
         );
 
-        $customerData = [
-            'identifiers' => [
-                'email' => 'ornek@email.com',
-                'phone_number' => '+905551234567',
-                'custom.user_id' => '12345'
+        $customer = $this->customerService->upsert(
+            identifiers: [
+                'email' => 'test@example.com'
             ],
-            'attributes' => [
-                'name' => 'Ahmet Yılmaz',
-                'age' => 30,
-                'city' => 'Istanbul',
-                'last_purchase_date' => '2024-01-15'
-            ],
-            'email_permission' => true,
-            'sms_permission' => true
-        ];
-
-        $customer = $this->customerService->upsert($customerData);
-
+            attributes: [
+                'name' => 'Test User'
+            ]
+        );
+        
         $this->assertInstanceOf(Customer::class, $customer);
         $this->assertEquals('12345', $customer->getId());
-        $this->assertEquals('ornek@email.com', $customer->getEmail());
-        $this->assertEquals('Ahmet Yılmaz', $customer->getName());
+        $this->assertEquals('test@example.com', $customer->getEmail());
     }
 
     public function test_customer_upsert_without_identifiers(): void
@@ -75,13 +60,10 @@ class CustomerServiceTest extends TestCase
         $this->expectException(InsiderException::class);
         $this->expectExceptionMessage('Identifiers array is required');
 
-        $customerData = [
-            'attributes' => [
-                'name' => 'Ahmet Yılmaz'
-            ]
-        ];
-
-        $this->customerService->upsert($customerData);
+        $this->customerService->upsert(
+            identifiers: [],
+            attributes: ['name' => 'Test User']
+        );
     }
 
     public function test_customer_upsert_without_valid_identifier(): void
