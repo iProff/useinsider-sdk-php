@@ -4,6 +4,8 @@ namespace KaracaTech\UseInsider\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use KaracaTech\UseInsider\Client\InsiderClient;
+use KaracaTech\UseInsider\Laravel\Events\InsiderUserUpsert;
+use KaracaTech\UseInsider\Laravel\Listeners\InsiderUserUpsertListener;
 
 class InsiderServiceProvider extends ServiceProvider
 {
@@ -27,5 +29,10 @@ class InsiderServiceProvider extends ServiceProvider
                 __DIR__.'/config/insider.php' => config_path('insider.php'),
             ], 'insider-config');
         }
+
+        $this->app['events']->listen(
+            InsiderUserUpsert::class,
+            InsiderUserUpsertListener::class
+        );
     }
 }
