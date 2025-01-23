@@ -1,0 +1,8 @@
+<?php
+
+if (!function_exists('insider')) {
+    function insider(): \KaracaTech\UseInsider\Client\InsiderClient
+    {
+        return app(\KaracaTech\UseInsider\Client\InsiderClient::class);
+    }
+}
