@@ -18,31 +18,37 @@ class CustomerService
     /**
      * Kullanıcı oluştur veya güncelle
      * 
-     * @param array $userData
+     * @param array $identifiers Kullanıcı tanımlayıcıları (email, phone_number, custom.*)
+     * @param array $attributes Kullanıcı özellikleri
      * @return Customer
      * @throws InsiderException
      */
-    public function upsert(array $userData): Customer
+    public function upsert(array $identifiers, array $attributes = [])
     {
+        if (empty($identifiers)) {
+            throw new InsiderException('Identifiers array is required');
+        }
+
         try {
             $endpoint = sprintf('%s/%s/upsert', self::BASE_PATH, self::API_VERSION);
-            dd($endpoint);
             
             $response = $this->client->post($endpoint, [
                 'json' => [
-                    'users' => [$this->prepareUserData($userData)]
+                    'users' => [[
+                        'identifiers' => $identifiers,
+                        'attributes' => $attributes
+                    ]]
                 ]
             ]);
 
             $responseData = json_decode($response->getBody()->getContents(), true);
             
-            if (!isset($responseData['data'][0])) {
+            if (!isset($responseData['data'])) {
                 throw new InsiderException('Invalid response from Insider API');
             }
 
-            return new Customer($responseData['data'][0]);
+            return new Customer($responseData['data']);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             throw new InsiderException('Failed to upsert customer: ' . $e->getMessage());
         }
     }
