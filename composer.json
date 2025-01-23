@@ -1,5 +1,5 @@
 {
-    "name": "karaca-tech/useinsider-sdk-php",
+    "name": "iproff/useinsider-sdk-php",
     "description": "PHP SDK for UseInsider",
     "version": "0.0.0.1",
     "type": "library",
