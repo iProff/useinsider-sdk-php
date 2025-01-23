@@ -47,7 +47,7 @@ class CustomerService
                 throw new InsiderException('Invalid response from Insider API');
             }
 
-            return new Customer($responseData['data']);
+            return $responseData['data'];
         } catch (\Exception $e) {
             throw new InsiderException('Failed to upsert customer: ' . $e->getMessage());
         }
