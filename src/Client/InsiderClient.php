@@ -22,7 +22,7 @@ class InsiderClient
             'base_uri' => $config['base_url'] ?? 'https://api.useinsider.com',
             'timeout' => $config['timeout'] ?? 30,
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'X-Request-Token' => $this->apiKey,
                 'X-Partner-Name' => $this->partnerName,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
